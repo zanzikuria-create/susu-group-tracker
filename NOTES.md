@@ -1,19 +1,33 @@
 # Assumptions and Decisions
 
-1. Contributions are in GHS, with at most two decimal places; money is stored as integer pesewas.
-2. Member names/IDs are unique after trimming whitespace and ignoring letter case.
-3. Members can only be added before the first contribution is recorded, preserving the agreed pot and payout order.
-4. Every member owes the same fixed contribution each week.
-5. Partial payments are allowed, but a member cannot pay more than their remaining balance.
-6. A week closes only when all members have paid in full. Otherwise the week remains open, no payout occurs, and outstanding balances are reported.
-7. The pot equals weekly contribution multiplied by the number of members.
-8. Each member receives one payout in join order. The rotation is complete after every member has received once.
-9. A week cannot close if there are no members.
-10. Data is held in memory only; exiting the program resets it.
+1. **Currency:** Contributions are recorded in Ghanaian cedis (GHS), with a maximum of two decimal places. Money is stored as integer pesewas (100 pesewas = GHS 1.00) to avoid floating-point rounding errors.
 
-## Improvements with more time
-- Persist data in SQLite/PostgreSQL.
-- Add a transaction/audit log and CSV export.
-- Support multiple groups, authentication, and stronger member IDs.
-- Add CI and more edge-case tests.
-- Confirm with users whether a rotation should repeat and whether late membership should be allowed.
+2. **Member uniqueness:** Member names or IDs must be unique after trimming surrounding whitespace and ignoring letter case.
+
+3. **Membership changes:** Members can only be added before the first contribution is recorded. This preserves the agreed contribution amount, pot calculation, and payout order.
+
+4. **Fixed contributions:** Every member owes the same fixed contribution amount each week.
+
+5. **Partial payments:** Members may pay in installments. A payment cannot exceed the member's outstanding balance for the current week.
+
+6. **Week closure:** A week can only close when every member has paid their full contribution. If any balance remains outstanding, the week stays open, no payout occurs, and the remaining amounts can be reported.
+
+7. **Pot calculation:** The weekly pot is calculated as the fixed weekly contribution multiplied by the total number of members.
+
+8. **Payout order:** Each member receives the pot once per rotation, following the order in which they joined the group.
+
+9. **Empty groups:** A week cannot close when the group has no members.
+
+10. **Data storage:** Data is held in memory only. Exiting the application resets the group's members, payments, and payout history.
+
+## Improvements with More Time
+
+- Add SQLite or PostgreSQL persistence so group data survives application restarts.
+- Introduce a transaction and audit log, with CSV export for record-keeping.
+- Support multiple groups, authentication, and more robust member identifiers.
+- Add continuous integration (CI) and additional edge-case tests.
+- Confirm with users whether the payout rotation should restart after every member has received a payout and how late membership should be handled.
+
+## Scope
+
+This version focuses on the core rules of one rotating savings group through a command-line interface. Persistent storage, multiple groups, and authentication are outside the current scope.
